@@ -1,0 +1,74 @@
+[
+  {
+    "id": "def-001",
+    "bus_id": "TN-07-BX-1142",
+    "lat": 13.0827,
+    "lng": 80.2707,
+    "type": "pothole",
+    "timestamp": "2026-09-07T08:14:00+05:30",
+    "img_url": "https://placehold.co/600x400?text=Pothole+1142"
+  },
+  {
+    "id": "def-002",
+    "bus_id": "TN-09-CY-4410",
+    "lat": 13.0604,
+    "lng": 80.2496,
+    "type": "traffic_congestion",
+    "timestamp": "2026-09-07T08:23:00+05:30",
+    "img_url": "https://placehold.co/600x400?text=Congestion+4410"
+  },
+  {
+    "id": "def-003",
+    "bus_id": "TN-07-BX-1142",
+    "lat": 13.0475,
+    "lng": 80.2201,
+    "type": "pothole",
+    "timestamp": "2026-09-07T08:32:00+05:30",
+    "img_url": "https://placehold.co/600x400?text=Pothole+1142b"
+  },
+  {
+    "id": "def-004",
+    "bus_id": "TN-11-AZ-7723",
+    "lat": 13.0359,
+    "lng": 80.245,
+    "type": "waterlogging",
+    "timestamp": "2026-09-07T08:41:00+05:30",
+    "img_url": "https://placehold.co/600x400?text=Waterlogging+7723"
+  },
+  {
+    "id": "def-005",
+    "bus_id": "TN-09-CY-4410",
+    "lat": 13.07,
+    "lng": 80.23,
+    "type": "traffic_congestion",
+    "timestamp": "2026-09-07T08:50:00+05:30",
+    "img_url": "https://placehold.co/600x400?text=Congestion+4410b"
+  },
+  {
+    "id": "def-006",
+    "bus_id": "TN-09-CY-4410",
+    "lat": 13.0655,
+    "lng": 80.244,
+    "type": "traffic_congestion",
+    "timestamp": "2026-09-07T08:58:00+05:30",
+    "img_url": "https://placehold.co/600x400?text=Congestion+4410c"
+  },
+  {
+    "id": "def-007",
+    "bus_id": "TN-11-AZ-7723",
+    "lat": 13.068,
+    "lng": 80.247,
+    "type": "traffic_congestion",
+    "timestamp": "2026-09-07T09:05:00+05:30",
+    "img_url": "https://placehold.co/600x400?text=Congestion+7723"
+  },
+  {
+    "id": "def-008",
+    "bus_id": "TN-12-BX-1142",
+    "lat": 13.0369,
+    "lng": 80.0437,
+    "type": "pothole",
+    "timestamp": "2026-09-07T08:14:00+05:30",
+    "img_url": "https://placehold.co/600x400?text=Pothole+1142"
+  }
+]
