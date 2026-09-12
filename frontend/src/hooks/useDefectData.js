@@ -8,10 +8,29 @@ import { queueSpeak, buildDefectSpeech } from '../utils/textToSpeech';
 
 const POLL_INTERVAL_MS = 3000;
 
-function toImageDataUrl(rawBase64) {
+function toImageBlobUrl(rawBase64) {
   if (!rawBase64) return null;
-  if (rawBase64.startsWith('data:')) return rawBase64; // already a data URL
-  return `data:image/jpeg;base64,${rawBase64}`;
+
+  // Already a real URL or blob URL - nothing to convert.
+  if (rawBase64.startsWith('http') || rawBase64.startsWith('blob:')) return rawBase64;
+
+  const base64Data = rawBase64.startsWith('data:')
+    ? rawBase64.split(',')[1]
+    : rawBase64;
+
+  try {
+    const byteCharacters = atob(base64Data);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: 'image/jpeg' });
+    return URL.createObjectURL(blob);
+  } catch (err) {
+    console.warn('Failed to convert image to Blob URL:', err.message);
+    return null;
+  }
 }
 
 function normalizeDetection(raw) {
@@ -29,7 +48,7 @@ function normalizeDetection(raw) {
     timestamp: raw.created_at,
     confidence: raw.confidence ?? null,
     vehicle_count: raw.vehicle_count ?? null,
-    img_url: toImageDataUrl(raw.image_base64),
+    img_url: toImageBlobUrl(raw.image_base64),
     location: raw.location ?? null,
     nearest_landmark: raw.nearest_landmark ?? null
   };
@@ -40,6 +59,7 @@ export default function useDefectData() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const seenIdsRef = useRef(new Set());
+  const lastSeenIdRef = useRef(0);
   const geocodeInFlightRef = useRef(false);
   const landmarkInFlightRef = useRef(false);
   const isFirstFetchRef = useRef(true);
@@ -51,9 +71,14 @@ export default function useDefectData() {
   useEffect(() => {
     let cancelled = false;
 
-    async function fetchDetections() {
+      async function fetchDetections() {
       try {
-        const res = await fetch(DETECTIONS_ENDPOINT, {
+        const url =
+          lastSeenIdRef.current > 0
+            ? `${DETECTIONS_ENDPOINT}?after_id=${lastSeenIdRef.current}`
+            : DETECTIONS_ENDPOINT;
+
+        const res = await fetch(url, {
           headers: { 'ngrok-skip-browser-warning': 'true' }
         });
         if (!res.ok) throw new Error(`Backend request failed (${res.status})`);
@@ -65,6 +90,8 @@ export default function useDefectData() {
 
         if (newOnes.length > 0) {
           newOnes.forEach((d) => seenIdsRef.current.add(d.id));
+          const maxId = Math.max(...rawList.map((raw) => Number(raw.id)));
+          if (maxId > lastSeenIdRef.current) lastSeenIdRef.current = maxId;
           setDefects((current) => sortByBusId([...current, ...newOnes]));
 
           if (isAutoVoiceOnRef.current && !isFirstFetchRef.current) {

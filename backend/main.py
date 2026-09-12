@@ -163,12 +163,21 @@ def create_detection(payload: EventIn, db: Session = Depends(get_db)):
 def list_detections(
     type: Optional[str] = None,
     limit: int = 100,
+    after_id: Optional[int] = None,
     db: Session = Depends(get_db),
 ):
-    """Returns recent detections, optionally filtered by type (e.g. ?type=pothole)."""
+    """
+    Returns recent detections, optionally filtered by type (e.g. ?type=pothole).
+
+    Pass after_id=<id> to only get detections with a higher id than the
+    given one - i.e. only what's new since the last poll. Without it,
+    behaves exactly as before (returns the most recent `limit` rows).
+    """
     query = db.query(models.Event)
     if type:
         query = query.filter(models.Event.type == type)
+    if after_id is not None:
+        query = query.filter(models.Event.id > after_id)
     events = query.order_by(models.Event.created_at.desc()).limit(limit).all()
     return [event_to_out(db, e) for e in events]
 

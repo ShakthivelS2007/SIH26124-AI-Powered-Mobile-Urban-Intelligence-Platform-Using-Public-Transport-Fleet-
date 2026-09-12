@@ -19,7 +19,7 @@ export default function DefectDetail() {
     return (
       <div>
         <p>Defect not found. It may have been removed from the data source.</p>
-        <Link to="/">&larr; Back to Dashboard</Link>
+        <Link to="/dashboard">&larr; Back to Dashboard</Link>
       </div>
     );
   }
@@ -28,7 +28,7 @@ export default function DefectDetail() {
 
   return (
     <div style={{ maxWidth: 640 }}>
-      <Link to="/" style={{ color: 'var(--color-text-secondary)', fontSize: 13 }}>
+      <Link to="/dashboard" style={{ color: 'var(--color-text-secondary)', fontSize: 13 }}>
         &larr; Back to Dashboard
       </Link>
 

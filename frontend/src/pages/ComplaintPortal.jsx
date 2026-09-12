@@ -275,7 +275,7 @@ function ComplaintPortalInner() {
                   gap: 28,
                   marginTop: 48,
                   color: 'var(--citizen-text-secondary)',
-                  fontSize: 12,
+                  fontSize: 16,
                   fontWeight: 600
                 }}
               >
