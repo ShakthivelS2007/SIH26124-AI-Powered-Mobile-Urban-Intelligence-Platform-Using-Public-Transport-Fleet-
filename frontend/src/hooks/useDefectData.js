@@ -8,12 +8,18 @@ import { queueSpeak, buildDefectSpeech } from '../utils/textToSpeech';
 
 const POLL_INTERVAL_MS = 3000;
 
+function toImageDataUrl(rawBase64) {
+  if (!rawBase64) return null;
+  if (rawBase64.startsWith('data:')) return rawBase64; // already a data URL
+  return `data:image/jpeg;base64,${rawBase64}`;
+}
+
 function normalizeDetection(raw) {
   const typeMap = {
     congestion: 'traffic_congestion'
   };
 
-    return {
+  return {
     id: String(raw.id),
     bus_id: raw.bus_id,
     type: typeMap[raw.type] ?? raw.type,
@@ -23,7 +29,7 @@ function normalizeDetection(raw) {
     timestamp: raw.created_at,
     confidence: raw.confidence ?? null,
     vehicle_count: raw.vehicle_count ?? null,
-    img_url: raw.img_url ?? null,
+    img_url: toImageDataUrl(raw.img_url),
     location: raw.location ?? null,
     nearest_landmark: raw.nearest_landmark ?? null
   };
@@ -61,9 +67,6 @@ export default function useDefectData() {
           newOnes.forEach((d) => seenIdsRef.current.add(d.id));
           setDefects((current) => sortByBusId([...current, ...newOnes]));
 
-          // Auto-read newly arrived detections aloud, but skip the very
-          // first fetch on page load (that would read out the entire
-          // existing backlog at once, which isn't useful).
           if (isAutoVoiceOnRef.current && !isFirstFetchRef.current) {
             newOnes.forEach((d) => queueSpeak(buildDefectSpeech(d)));
           }
