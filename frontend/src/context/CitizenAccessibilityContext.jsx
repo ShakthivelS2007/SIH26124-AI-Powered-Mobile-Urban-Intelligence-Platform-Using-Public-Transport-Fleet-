@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from 'react';
+import { citizenTranslations } from '../utils/citizenTranslations';
 
 const CitizenAccessibilityContext = createContext(null);
 
@@ -9,6 +10,7 @@ const STEP = 0.1;
 export function CitizenAccessibilityProvider({ children }) {
   const [theme, setTheme] = useState('light'); // 'dark' | 'light'
   const [fontScale, setFontScale] = useState(1);
+  const [language, setLanguage] = useState('en'); // 'en' | 'ta' | 'hi'
 
   function increaseFont() {
     setFontScale((s) => Math.min(MAX_SCALE, +(s + STEP).toFixed(2)));
@@ -26,9 +28,23 @@ export function CitizenAccessibilityProvider({ children }) {
     setTheme((t) => (t === 'dark' ? 'light' : 'dark'));
   }
 
+  function t(key) {
+    return citizenTranslations[language]?.[key] ?? citizenTranslations.en[key] ?? key;
+  }
+
   return (
     <CitizenAccessibilityContext.Provider
-      value={{ theme, toggleTheme, fontScale, increaseFont, decreaseFont, resetFont }}
+      value={{
+        theme,
+        toggleTheme,
+        fontScale,
+        increaseFont,
+        decreaseFont,
+        resetFont,
+        language,
+        setLanguage,
+        t
+      }}
     >
       {children}
     </CitizenAccessibilityContext.Provider>

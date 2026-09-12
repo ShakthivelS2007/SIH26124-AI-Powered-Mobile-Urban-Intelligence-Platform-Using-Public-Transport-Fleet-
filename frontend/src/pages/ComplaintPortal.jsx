@@ -55,6 +55,45 @@ function UserIcon() {
   );
 }
 
+function SnapIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M4 8h3l1.5-2h7L17 8h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z"
+        stroke="#ffffff"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+      />
+      <circle cx="12" cy="14" r="3.2" stroke="#ffffff" strokeWidth="1.6" />
+    </svg>
+  );
+}
+
+function GearIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="12" r="3" stroke="#ffffff" strokeWidth="1.6" />
+      <path
+        d="M12 2v3M12 19v3M22 12h-3M5 12H2M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1M18.4 18.4l-2.1-2.1M7.7 7.7 5.6 5.6"
+        stroke="#ffffff"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function DashboardIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+      <rect x="3" y="3" width="8" height="8" rx="1.5" stroke="#ffffff" strokeWidth="1.6" />
+      <rect x="13" y="3" width="8" height="5" rx="1.5" stroke="#ffffff" strokeWidth="1.6" />
+      <rect x="13" y="10" width="8" height="11" rx="1.5" stroke="#ffffff" strokeWidth="1.6" />
+      <rect x="3" y="13" width="8" height="8" rx="1.5" stroke="#ffffff" strokeWidth="1.6" />
+    </svg>
+  );
+}
+
 function LogoutIcon() {
   return (
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
@@ -76,11 +115,122 @@ function LogoutIcon() {
   );
 }
 
+function WorkflowStep({ number, icon, title, description }) {
+  return (
+    <div
+      style={{
+        background: 'var(--citizen-surface)',
+        border: '1px solid var(--citizen-border)',
+        borderRadius: 14,
+        padding: 20
+      }}
+    >
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 10,
+          marginBottom: 16
+        }}
+      >
+        <span
+          style={{
+            width: 26,
+            height: 26,
+            borderRadius: '50%',
+            background: 'var(--citizen-accent)',
+            color: '#ffffff',
+            fontSize: 12,
+            fontWeight: 700,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0
+          }}
+        >
+          {number}
+        </span>
+        <div
+          style={{
+            width: 40,
+            height: 40,
+            borderRadius: 10,
+            background: 'var(--citizen-accent)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          {icon}
+        </div>
+      </div>
+
+      <h3
+        style={{
+          fontSize: 16,
+          fontWeight: 700,
+          color: 'var(--citizen-text-primary)',
+          margin: '0 0 8px',
+          textAlign: 'center'
+        }}
+      >
+        {title}
+      </h3>
+      <p
+        style={{
+          fontSize: 13,
+          lineHeight: 1.6,
+          color: 'var(--citizen-text-secondary)',
+          margin: 0,
+          textAlign: 'center'
+        }}
+      >
+        {description}
+      </p>
+    </div>
+  );
+}
+
+function StatCard({ icon, label, value, subtext, valueColor }) {
+  return (
+    <div
+      style={{
+        background: 'var(--citizen-surface)',
+        border: '1px solid var(--citizen-border)',
+        borderRadius: 12,
+        padding: 14,
+        flex: '1 1 140px',
+        minWidth: 140
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+        <span
+          style={{
+            fontSize: 10,
+            fontWeight: 700,
+            letterSpacing: 0.4,
+            textTransform: 'uppercase',
+            color: 'var(--citizen-text-secondary)'
+          }}
+        >
+          {label}
+        </span>
+        {icon}
+      </div>
+      <div style={{ fontSize: 22, fontWeight: 800, color: valueColor ?? 'var(--citizen-text-primary)' }}>
+        {value}
+      </div>
+      <div style={{ fontSize: 11, color: 'var(--citizen-text-secondary)', marginTop: 2 }}>{subtext}</div>
+    </div>
+  );
+}
+
 function ComplaintPortalInner() {
   const [aadhaarDigits, setAadhaarDigits] = useState(null);
   const [submitted, setSubmitted] = useState(false);
   const formRef = useRef(null);
-  const { theme, fontScale } = useCitizenAccessibility();
+  const { theme, fontScale, t } = useCitizenAccessibility();
 
   function handleLoginSuccess(digits) {
     setAadhaarDigits(digits);
@@ -128,7 +278,7 @@ function ComplaintPortalInner() {
                   letterSpacing: 0.3
                 }}
               >
-                RoadWatch
+                {t('portalTitle')}
               </div>
               <div
                 style={{
@@ -139,7 +289,7 @@ function ComplaintPortalInner() {
                   color: 'var(--citizen-text-secondary)'
                 }}
               >
-                Citizen Road Safety &amp; Complaint Portal
+                {t('portalSubtitle')}
               </div>
             </Link>
 
@@ -158,7 +308,7 @@ function ComplaintPortalInner() {
                 }}
               >
                 <UserIcon />
-                Verified: {`XXXX XXXX ${aadhaarDigits.slice(-4)}`}
+                {t('verifiedLabel')}: {`XXXX XXXX ${aadhaarDigits.slice(-4)}`}
               </div>
 
               <button
@@ -178,7 +328,7 @@ function ComplaintPortalInner() {
                 }}
               >
                 <LogoutIcon />
-                Logout
+                {t('logout')}
               </button>
             </div>
           </header>
@@ -186,12 +336,12 @@ function ComplaintPortalInner() {
           {!submitted && (
             <section
               style={{
-                minHeight: 'calc(100vh - 76px)',
+                minHeight: 'auto',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                padding: '40px 20px',
+                padding: '60px 20px 20px',
                 textAlign: 'center',
                 maxWidth: 640,
                 margin: '0 auto'
@@ -227,7 +377,7 @@ function ComplaintPortalInner() {
                   marginBottom: 16
                 }}
               >
-                Connected to Municipal Dashboard
+                {t('connectedBadge')}
               </span>
 
               <h1
@@ -238,7 +388,7 @@ function ComplaintPortalInner() {
                   margin: '0 0 16px'
                 }}
               >
-                Report a Road Defect
+                {t('reportTitle')}
               </h1>
               <p
                 style={{
@@ -248,9 +398,7 @@ function ComplaintPortalInner() {
                   margin: '0 0 32px'
                 }}
               >
-                Spot a pothole, waterlogged stretch, missing sign, or damaged crossing?
-                Complaints submitted here go directly to the municipal RoadWatch dashboard,
-                alongside detections from the city bus fleet, so repair teams can act on them.
+                {t('reportDescription')}
               </p>
               <button
                 onClick={handleScrollToForm}
@@ -266,7 +414,7 @@ function ComplaintPortalInner() {
                   boxShadow: '0 6px 16px rgba(37, 99, 235, 0.3)'
                 }}
               >
-                Enter Complaint
+                {t('enterComplaint')}
               </button>
 
               <div
@@ -279,9 +427,80 @@ function ComplaintPortalInner() {
                   fontWeight: 600
                 }}
               >
-                <span>📷 Photo Required</span>
-                <span>📍 Auto Geotagged</span>
-                <span>⚡ Instant Routing</span>
+                <span>📷 {t('photoRequired')}</span>
+                <span>📍 {t('autoGeotagged')}</span>
+                <span>⚡ {t('instantRouting')}</span>
+              </div>
+            </section>
+          )}
+
+          {!submitted && (
+            <section style={{ padding: '0px 20px 60px' }}>
+              <div style={{ maxWidth: 960, margin: '0 auto', textAlign: 'center' }}>
+                <span
+                  style={{
+                    display: 'inline-block',
+                    padding: '5px 12px',
+                    borderRadius: 'var(--radius-pill)',
+                    background: 'var(--citizen-accent-bg)',
+                    fontSize: 11,
+                    fontWeight: 700,
+                    letterSpacing: 0.4,
+                    textTransform: 'uppercase',
+                    color: 'var(--citizen-accent)',
+                    marginBottom: 14
+                  }}
+                >
+                  {t('workflowBadge')}
+                </span>
+
+                <h2
+                  style={{
+                    fontSize: 26,
+                    fontWeight: 800,
+                    color: 'var(--citizen-text-primary)',
+                    margin: '0 0 8px'
+                  }}
+                >
+                  {t('workflowTitle')}
+                </h2>
+                <p
+                  style={{
+                    fontSize: 14,
+                    color: 'var(--citizen-text-secondary)',
+                    margin: '0 0 32px'
+                  }}
+                >
+                  {t('workflowSubtitle')}
+                </p>
+
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+                    gap: 20,
+                    textAlign: 'left'
+                  }}
+                >
+                  <WorkflowStep
+                    number={1}
+                    icon={<SnapIcon />}
+                    title={t('step1Title')}
+                    description={t('step1Description')}
+                  />
+                  <WorkflowStep
+                    number={2}
+                    icon={<GearIcon />}
+                    title={t('step2Title')}
+                    description={t('step2Description')}
+                  />
+                  <WorkflowStep
+                    number={3}
+                    icon={<DashboardIcon />}
+                    title={t('step3Title')}
+                    description={t('step3Description')}
+                  />
+                </div>
               </div>
             </section>
           )}
@@ -322,7 +541,7 @@ function ComplaintPortalInner() {
                     margin: '0 0 8px'
                   }}
                 >
-                  Thank you for being a proper citizen
+                  {t('thankYouTitle')}
                 </h2>
                 <p
                   style={{
@@ -332,7 +551,7 @@ function ComplaintPortalInner() {
                     margin: '0 0 28px'
                   }}
                 >
-                  Your complaint has been forwarded to the municipal dashboard for review.
+                  {t('thankYouDescription')}
                 </p>
                 <button
                   onClick={() => setSubmitted(false)}
@@ -347,7 +566,7 @@ function ComplaintPortalInner() {
                     cursor: 'pointer'
                   }}
                 >
-                  Submit Another Complaint
+                  {t('submitAnother')}
                 </button>
               </div>
             ) : (

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useCitizenAccessibility } from '../../context/CitizenAccessibilityContext';
 
 function formatAadhaar(value) {
   const digits = value.replace(/\D/g, '').slice(0, 12);
@@ -110,6 +111,7 @@ function PinOffIcon() {
 }
 
 export default function AadhaarLogin({ onSuccess }) {
+  const { t } = useCitizenAccessibility();
   const [step, setStep] = useState('aadhaar'); // 'aadhaar' | 'otp'
   const [aadhaarInput, setAadhaarInput] = useState('');
   const [otpInput, setOtpInput] = useState('');
@@ -180,7 +182,7 @@ export default function AadhaarLogin({ onSuccess }) {
               color: 'var(--citizen-accent)'
             }}
           >
-            <DeptIcon /> Dept. of Public Works &amp; Urban Infrastructure
+            <DeptIcon /> {t('deptBadge')}
           </span>
           <span
             style={{
@@ -196,7 +198,7 @@ export default function AadhaarLogin({ onSuccess }) {
             }}
           >
             <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--citizen-success-text)' }} />
-            Smart City Safety Mission
+            {t('missionBadge')}
           </span>
         </div>
 
@@ -210,7 +212,7 @@ export default function AadhaarLogin({ onSuccess }) {
             maxWidth: 520
           }}
         >
-          Fast, Accountable Citizen Road Defect Redressal.
+          {t('heroTitle')}
         </h1>
 
         <p
@@ -222,15 +224,29 @@ export default function AadhaarLogin({ onSuccess }) {
             maxWidth: 500
           }}
         >
-          Empowering verified residents to report potholes, missing signage, and hazardous road
-          conditions directly to municipal dispatch units, alongside the same live detections
-          gathered by the city bus fleet.
+          {t('heroSubtitle')}
         </p>
 
         <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginBottom: 32 }}>
-          <StatCard icon={<PotholeIcon />} label="Reported This Year" value="14,820+" subtext="Defects logged" />
-          <StatCard icon={<ClockCheckIcon />} label="SLA Met" value="98.2%" subtext="Under 48h turnaround" valueColor="var(--citizen-success-text)" />
-          <StatCard icon={<BusFleetIcon />} label="AI Bus Fleets" value="340+" subtext="Edge-vision units" />
+          <StatCard
+            icon={<PotholeIcon />}
+            label={t('statReportedLabel')}
+            value="14,820+"
+            subtext={t('statReportedSubtext')}
+          />
+          <StatCard
+            icon={<ClockCheckIcon />}
+            label={t('statSlaLabel')}
+            value="98.2%"
+            subtext={t('statSlaSubtext')}
+            valueColor="var(--citizen-success-text)"
+          />
+          <StatCard
+            icon={<BusFleetIcon />}
+            label={t('statFleetLabel')}
+            value="340+"
+            subtext={t('statFleetSubtext')}
+          />
         </div>
 
         <div
@@ -257,7 +273,7 @@ export default function AadhaarLogin({ onSuccess }) {
               <PinOffIcon />
             </div>
             <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--citizen-text-primary)' }}>
-              UIDAI Stamped &amp; Encrypted
+              {t('securityTitle')}
             </span>
           </div>
           <p
@@ -268,15 +284,14 @@ export default function AadhaarLogin({ onSuccess }) {
               margin: '0 0 12px'
             }}
           >
-            Aadhaar details are authenticated through the UIDAI-linked OTP gateway. Raw 12-digit
-            numbers are never retained on RoadWatch servers.
+            {t('securityDescription')}
           </p>
           <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', fontSize: 11.5, fontWeight: 600 }}>
             <span style={{ display: 'flex', alignItems: 'center', gap: 5, color: 'var(--citizen-text-secondary)' }}>
-              <LockIcon /> 256-bit TLS End-to-End
+              <LockIcon /> {t('securityTls')}
             </span>
             <span style={{ display: 'flex', alignItems: 'center', gap: 5, color: 'var(--citizen-text-secondary)' }}>
-              <PinOffIcon /> Zero Local Retention
+              <PinOffIcon /> {t('securityRetention')}
             </span>
           </div>
         </div>
@@ -319,10 +334,10 @@ export default function AadhaarLogin({ onSuccess }) {
           </div>
 
           <h2 style={{ fontSize: 21, fontWeight: 700, margin: '0 0 6px', color: 'var(--citizen-text-primary)' }}>
-            Citizen Complaint Portal
+            {t('loginTitle')}
           </h2>
           <p style={{ fontSize: 13.5, lineHeight: 1.6, color: 'var(--citizen-text-secondary)', margin: '0 0 28px' }}>
-            Log in with your Aadhaar-linked mobile number to report a road defect.
+            {t('loginSubtitle')}
           </p>
 
           <div style={{ display: 'flex', gap: 6, marginBottom: 28 }}>
@@ -332,7 +347,7 @@ export default function AadhaarLogin({ onSuccess }) {
 
           {step === 'aadhaar' && (
             <form onSubmit={handleSendOtp}>
-              <FieldLabel>Aadhaar Number</FieldLabel>
+              <FieldLabel>{t('aadhaarLabel')}</FieldLabel>
               <input
                 type="text"
                 inputMode="numeric"
@@ -346,7 +361,7 @@ export default function AadhaarLogin({ onSuccess }) {
               />
               {error && <ErrorBanner>{error}</ErrorBanner>}
               <button type="submit" style={buttonStyle}>
-                Send OTP
+                {t('sendOtp')}
               </button>
             </form>
           )}
@@ -354,8 +369,7 @@ export default function AadhaarLogin({ onSuccess }) {
           {step === 'otp' && (
             <form onSubmit={handleVerifyOtp}>
               <p style={{ fontSize: 13, color: 'var(--citizen-text-primary)', margin: '0 0 16px', lineHeight: 1.6 }}>
-                OTP sent to the mobile number linked with Aadhaar{' '}
-                <strong>{maskAadhaar(aadhaarDigits)}</strong>.
+                {t('otpSentPrefix')} <strong>{maskAadhaar(aadhaarDigits)}</strong>.
               </p>
 
               {/* Demo-only: showing the OTP directly since there's no real SMS gateway */}
@@ -379,7 +393,7 @@ export default function AadhaarLogin({ onSuccess }) {
                 </span>
               </div>
 
-              <FieldLabel>Enter OTP</FieldLabel>
+              <FieldLabel>{t('otpLabel')}</FieldLabel>
               <input
                 type="text"
                 inputMode="numeric"
@@ -394,7 +408,7 @@ export default function AadhaarLogin({ onSuccess }) {
               />
               {error && <ErrorBanner>{error}</ErrorBanner>}
               <button type="submit" style={buttonStyle}>
-                Verify &amp; Continue
+                {t('verifyContinue')}
               </button>
 
               <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 14, fontSize: 12.5 }}>
@@ -407,10 +421,10 @@ export default function AadhaarLogin({ onSuccess }) {
                   }}
                   style={linkButtonStyle}
                 >
-                  &larr; Change number
+                  {t('changeNumber')}
                 </button>
                 <button type="button" onClick={handleResendOtp} style={linkButtonStyle}>
-                  Resend OTP
+                  {t('resendOtp')}
                 </button>
               </div>
             </form>

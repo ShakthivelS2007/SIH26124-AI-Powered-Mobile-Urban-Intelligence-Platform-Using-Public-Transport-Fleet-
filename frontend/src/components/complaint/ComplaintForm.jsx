@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { saveCitizenComplaint } from '../../utils/citizenComplaints';
+import { useCitizenAccessibility } from '../../context/CitizenAccessibilityContext';
 
 const MAX_IMAGE_WIDTH = 960;
 const JPEG_QUALITY = 0.8;
@@ -79,6 +80,7 @@ function compressImageFile(file) {
 }
 
 export default function ComplaintForm({ aadhaarDigits, onSubmitted }) {
+  const { t } = useCitizenAccessibility();
   const [photoDataUrl, setPhotoDataUrl] = useState(null);
   const [geo, setGeo] = useState(null);
   const [geoError, setGeoError] = useState('');
@@ -162,13 +164,13 @@ export default function ComplaintForm({ aadhaarDigits, onSubmitted }) {
       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
 
       <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--citizen-text-primary)', margin: '0 0 4px' }}>
-        Complaint Details
+        {t('formTitle')}
       </h2>
       <p style={{ fontSize: 13, color: 'var(--citizen-text-secondary)', margin: '0 0 24px' }}>
-        Our AI will automatically identify the type of defect from your photo.
+        {t('formSubtitle')}
       </p>
 
-      <SectionLabel required>Geotagged Photo</SectionLabel>
+      <SectionLabel required>{t('photoLabel')}</SectionLabel>
 
       {!photoDataUrl ? (
         <label style={dropzoneStyle}>
@@ -181,10 +183,10 @@ export default function ComplaintForm({ aadhaarDigits, onSubmitted }) {
           />
           <CameraIcon />
           <span style={{ fontSize: 13.5, fontWeight: 600, color: 'var(--citizen-text-primary)', marginTop: 10 }}>
-            {compressing ? 'Processing photo...' : 'Tap to take or upload a photo'}
+            {compressing ? '...' : t('photoPlaceholder')}
           </span>
           <span style={{ fontSize: 12, color: 'var(--citizen-text-secondary)', marginTop: 2 }}>
-            Your current location will be tagged automatically
+            {t('photoHint')}
           </span>
         </label>
       ) : (
@@ -217,24 +219,24 @@ export default function ComplaintForm({ aadhaarDigits, onSubmitted }) {
             gap: 5
           }}
         >
-          📍 Location tagged: {geo.lat.toFixed(5)}, {geo.lng.toFixed(5)}
+          📍 {t('locationTagged')}: {geo.lat.toFixed(5)}, {geo.lng.toFixed(5)}
         </p>
       )}
       {geoError && <ErrorBanner style={{ marginTop: 10 }}>{geoError}</ErrorBanner>}
       {!geo && !geoError && photoDataUrl && (
         <p style={{ fontSize: 12.5, color: 'var(--citizen-text-secondary)', margin: '10px 0 20px' }}>
-          Tagging location...
+          {t('taggingLocation')}
         </p>
       )}
 
-      <SectionLabel>Location Description (optional)</SectionLabel>
+      <SectionLabel>{t('locationLabel')}</SectionLabel>
       <input
         type="text"
         value={location}
         onChange={(e) => setLocation(e.target.value)}
         onFocus={() => setFocusedField('location')}
         onBlur={() => setFocusedField(null)}
-        placeholder="e.g. Near Anna Salai bus stop"
+        placeholder={t('locationPlaceholder')}
         style={{ ...fieldStyle(focusedField === 'location'), marginBottom: 24 }}
       />
 
@@ -242,7 +244,7 @@ export default function ComplaintForm({ aadhaarDigits, onSubmitted }) {
 
       <button type="submit" disabled={submitting || compressing} style={submitButtonStyle(submitting)}>
         {submitting && <Spinner />}
-        {submitting ? 'Submitting...' : 'Submit Complaint'}
+        {submitting ? t('submitting') : t('submitComplaint')}
       </button>
     </form>
   );
@@ -325,16 +327,6 @@ function fieldStyle(focused) {
     transition: 'border-color 0.15s ease, box-shadow 0.15s ease'
   };
 }
-
-const selectChevronStyle = {
-  position: 'absolute',
-  right: 14,
-  top: '50%',
-  transform: 'translateY(-50%)',
-  pointerEvents: 'none',
-  color: 'var(--citizen-text-secondary)',
-  fontSize: 12
-};
 
 function submitButtonStyle(submitting) {
   return {
