@@ -8,14 +8,13 @@ export async function saveCitizenComplaint(complaintData) {
       'ngrok-skip-browser-warning': 'true' // Preserves compatibility with ngrok endpoints
     },
     body: JSON.stringify({
-      bus_id: complaintData.bus_id, // e.g. "Citizen Report ([Aadhaar Redacted])"
-      type: complaintData.type,
-      latitude: complaintData.lat,
-      longitude: complaintData.lng,
-      location: complaintData.location,
-      created_at: new Date().toISOString(),
-      image_base64: complaintData.img_url.split(',')[1] ?? complaintData.img_url
-    })
+    bus_id: complaintData.bus_id,
+    latitude: complaintData.lat,
+    longitude: complaintData.lng,
+    location: complaintData.location,
+    created_at: new Date().toISOString(),
+    image_base64: complaintData.img_url.split(',')[1] ?? complaintData.img_url
+  })
   });
 
   if (!response.ok) {

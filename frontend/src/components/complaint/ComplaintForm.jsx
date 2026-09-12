@@ -1,23 +1,19 @@
 import { useState } from 'react';
 import { saveCitizenComplaint } from '../../utils/citizenComplaints';
 
-const DEFECT_TYPE_OPTIONS = [
-  { value: 'pothole', label: 'Pothole' },
-  { value: 'waterlogging', label: 'Waterlogging' },
-  { value: 'traffic_congestion', label: 'Traffic Congestion' },
-  { value: 'sign', label: 'Sign' }
-];
+const MAX_IMAGE_WIDTH = 960;
+const JPEG_QUALITY = 0.8;
 
 function CameraIcon() {
   return (
     <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
       <path
         d="M4 8h3l1.5-2h7L17 8h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z"
-        stroke="var(--color-citizen-accent)"
+        stroke="var(--citizen-accent)"
         strokeWidth="1.6"
         strokeLinejoin="round"
       />
-      <circle cx="12" cy="14" r="3.5" stroke="var(--color-citizen-accent)" strokeWidth="1.6" />
+      <circle cx="12" cy="14" r="3.5" stroke="var(--citizen-accent)" strokeWidth="1.6" />
     </svg>
   );
 }
@@ -25,12 +21,7 @@ function CameraIcon() {
 function CloseIcon() {
   return (
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-      <path
-        d="M6 6l12 12M18 6L6 18"
-        stroke="#ffffff"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-      />
+      <path d="M6 6l12 12M18 6L6 18" stroke="#ffffff" strokeWidth="2.2" strokeLinecap="round" />
     </svg>
   );
 }
@@ -50,23 +41,67 @@ function Spinner() {
   );
 }
 
+// Downscales and re-compresses an image file client-side before it's
+// base64-encoded, so the payload sent to the backend is much smaller
+// than the original phone-camera photo. Mirrors the same approach the
+// backend's own combiner script uses server-side (960px max width,
+// JPEG quality 80) so both paths produce similarly-sized images.
+function compressImageFile(file) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const objectUrl = URL.createObjectURL(file);
+
+    img.onload = () => {
+      URL.revokeObjectURL(objectUrl);
+
+      let { width, height } = img;
+      if (width > MAX_IMAGE_WIDTH) {
+        height = Math.round((height * MAX_IMAGE_WIDTH) / width);
+        width = MAX_IMAGE_WIDTH;
+      }
+
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+
+      resolve(canvas.toDataURL('image/jpeg', JPEG_QUALITY));
+    };
+
+    img.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      reject(new Error('Could not load the selected image.'));
+    };
+
+    img.src = objectUrl;
+  });
+}
+
 export default function ComplaintForm({ aadhaarDigits, onSubmitted }) {
   const [photoDataUrl, setPhotoDataUrl] = useState(null);
   const [geo, setGeo] = useState(null);
   const [geoError, setGeoError] = useState('');
-  const [defectType, setDefectType] = useState('');
   const [location, setLocation] = useState('');
   const [formError, setFormError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [compressing, setCompressing] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
 
-  function handlePhotoChange(e) {
+  async function handlePhotoChange(e) {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = () => setPhotoDataUrl(reader.result);
-    reader.readAsDataURL(file);
+    setFormError('');
+    setCompressing(true);
+    try {
+      const compressedDataUrl = await compressImageFile(file);
+      setPhotoDataUrl(compressedDataUrl);
+    } catch (err) {
+      setFormError(err.message);
+    } finally {
+      setCompressing(false);
+    }
 
     setGeoError('');
     setGeo(null);
@@ -98,17 +133,12 @@ export default function ComplaintForm({ aadhaarDigits, onSubmitted }) {
       setFormError('Location could not be captured from the photo. Please retry adding the photo.');
       return;
     }
-    if (!defectType) {
-      setFormError('Please select a defect type.');
-      return;
-    }
 
     setFormError('');
     setSubmitting(true);
 
     const complaint = {
       bus_id: `Citizen Report (${aadhaarDigits.slice(-4)})`,
-      type: defectType,
       lat: geo.lat,
       lng: geo.lng,
       location: location.trim() || null,
@@ -131,11 +161,11 @@ export default function ComplaintForm({ aadhaarDigits, onSubmitted }) {
     <form onSubmit={handleSubmit} style={{ width: '100%' }}>
       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
 
-      <h2 style={{ fontSize: 18, fontWeight: 700, color: '#0f172a', margin: '0 0 4px' }}>
+      <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--citizen-text-primary)', margin: '0 0 4px' }}>
         Complaint Details
       </h2>
-      <p style={{ fontSize: 13, color: '#64748b', margin: '0 0 24px' }}>
-        Fields marked <span style={{ color: '#dc2626' }}>*</span> are required.
+      <p style={{ fontSize: 13, color: 'var(--citizen-text-secondary)', margin: '0 0 24px' }}>
+        Our AI will automatically identify the type of defect from your photo.
       </p>
 
       <SectionLabel required>Geotagged Photo</SectionLabel>
@@ -150,10 +180,10 @@ export default function ComplaintForm({ aadhaarDigits, onSubmitted }) {
             style={{ display: 'none' }}
           />
           <CameraIcon />
-          <span style={{ fontSize: 13.5, fontWeight: 600, color: '#334155', marginTop: 10 }}>
-            Tap to take or upload a photo
+          <span style={{ fontSize: 13.5, fontWeight: 600, color: 'var(--citizen-text-primary)', marginTop: 10 }}>
+            {compressing ? 'Processing photo...' : 'Tap to take or upload a photo'}
           </span>
-          <span style={{ fontSize: 12, color: '#94a3b8', marginTop: 2 }}>
+          <span style={{ fontSize: 12, color: 'var(--citizen-text-secondary)', marginTop: 2 }}>
             Your current location will be tagged automatically
           </span>
         </label>
@@ -179,7 +209,7 @@ export default function ComplaintForm({ aadhaarDigits, onSubmitted }) {
         <p
           style={{
             fontSize: 12.5,
-            color: 'var(--color-citizen-accent)',
+            color: 'var(--citizen-accent)',
             fontWeight: 600,
             margin: '10px 0 20px',
             display: 'flex',
@@ -192,29 +222,10 @@ export default function ComplaintForm({ aadhaarDigits, onSubmitted }) {
       )}
       {geoError && <ErrorBanner style={{ marginTop: 10 }}>{geoError}</ErrorBanner>}
       {!geo && !geoError && photoDataUrl && (
-        <p style={{ fontSize: 12.5, color: '#94a3b8', margin: '10px 0 20px' }}>
+        <p style={{ fontSize: 12.5, color: 'var(--citizen-text-secondary)', margin: '10px 0 20px' }}>
           Tagging location...
         </p>
       )}
-
-      <SectionLabel required>Defect Type</SectionLabel>
-      <div style={{ position: 'relative', marginBottom: 22 }}>
-        <select
-          value={defectType}
-          onChange={(e) => setDefectType(e.target.value)}
-          onFocus={() => setFocusedField('type')}
-          onBlur={() => setFocusedField(null)}
-          style={{ ...fieldStyle(focusedField === 'type'), appearance: 'none' }}
-        >
-          <option value="">Select a defect type...</option>
-          {DEFECT_TYPE_OPTIONS.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
-        </select>
-        <span style={selectChevronStyle}>▾</span>
-      </div>
 
       <SectionLabel>Location Description (optional)</SectionLabel>
       <input
@@ -229,7 +240,7 @@ export default function ComplaintForm({ aadhaarDigits, onSubmitted }) {
 
       {formError && <ErrorBanner style={{ marginBottom: 16 }}>{formError}</ErrorBanner>}
 
-      <button type="submit" disabled={submitting} style={submitButtonStyle(submitting)}>
+      <button type="submit" disabled={submitting || compressing} style={submitButtonStyle(submitting)}>
         {submitting && <Spinner />}
         {submitting ? 'Submitting...' : 'Submit Complaint'}
       </button>
@@ -244,11 +255,11 @@ function SectionLabel({ children, required }) {
         display: 'block',
         fontSize: 12.5,
         fontWeight: 600,
-        color: '#334155',
+        color: 'var(--citizen-text-primary)',
         marginBottom: 8
       }}
     >
-      {children} {required && <span style={{ color: '#dc2626' }}>*</span>}
+      {children} {required && <span style={{ color: 'var(--citizen-danger-text)' }}>*</span>}
     </label>
   );
 }
@@ -258,9 +269,9 @@ function ErrorBanner({ children, style }) {
     <div
       style={{
         fontSize: 12.5,
-        color: '#dc2626',
-        background: '#fef2f2',
-        border: '1px solid #fecaca',
+        color: 'var(--citizen-danger-text)',
+        background: 'var(--citizen-danger-bg)',
+        border: '1px solid var(--citizen-danger-text)',
         borderRadius: 8,
         padding: '8px 12px',
         ...style
@@ -277,9 +288,9 @@ const dropzoneStyle = {
   alignItems: 'center',
   justifyContent: 'center',
   padding: '32px 20px',
-  border: '2px dashed var(--color-citizen-border)',
+  border: '2px dashed var(--citizen-border)',
   borderRadius: 14,
-  background: 'var(--color-citizen-accent-bg)',
+  background: 'var(--citizen-accent-bg)',
   cursor: 'pointer',
   marginBottom: 8
 };
@@ -304,13 +315,13 @@ function fieldStyle(focused) {
     width: '100%',
     padding: '13px 14px',
     fontSize: 14,
-    border: `1.5px solid ${focused ? 'var(--color-citizen-accent)' : 'var(--color-citizen-border)'}`,
+    border: `1.5px solid ${focused ? 'var(--citizen-accent)' : 'var(--citizen-border)'}`,
     borderRadius: 10,
     outline: 'none',
     boxSizing: 'border-box',
-    background: '#ffffff',
-    color: '#0f172a',
-    boxShadow: focused ? '0 0 0 3px rgba(37, 99, 235, 0.12)' : 'none',
+    background: 'var(--citizen-input-bg)',
+    color: 'var(--citizen-text-primary)',
+    boxShadow: focused ? '0 0 0 3px rgba(59, 130, 246, 0.18)' : 'none',
     transition: 'border-color 0.15s ease, box-shadow 0.15s ease'
   };
 }
@@ -321,7 +332,7 @@ const selectChevronStyle = {
   top: '50%',
   transform: 'translateY(-50%)',
   pointerEvents: 'none',
-  color: '#94a3b8',
+  color: 'var(--citizen-text-secondary)',
   fontSize: 12
 };
 
@@ -332,7 +343,7 @@ function submitButtonStyle(submitting) {
     fontSize: 15,
     fontWeight: 600,
     color: '#ffffff',
-    background: 'var(--color-citizen-accent)',
+    background: 'var(--citizen-accent)',
     border: 'none',
     borderRadius: 10,
     cursor: submitting ? 'default' : 'pointer',
