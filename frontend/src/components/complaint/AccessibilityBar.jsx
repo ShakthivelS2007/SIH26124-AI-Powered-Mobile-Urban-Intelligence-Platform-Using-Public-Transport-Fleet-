@@ -9,7 +9,7 @@ export default function AccessibilityBar({ onSkipToContent }) {
     <div
       style={{
         width: '100%',
-        background: '#0b1220',
+        background: '#050505',
         borderBottom: '1px solid rgba(255,255,255,0.08)',
         display: 'flex',
         alignItems: 'center',

@@ -141,7 +141,7 @@ function WorkflowStep({ number, icon, title, description }) {
             borderRadius: '50%',
             background: 'var(--citizen-accent)',
             color: '#ffffff',
-            fontSize: 12,
+            fontSize: 12  ,
             fontWeight: 700,
             display: 'flex',
             alignItems: 'center',

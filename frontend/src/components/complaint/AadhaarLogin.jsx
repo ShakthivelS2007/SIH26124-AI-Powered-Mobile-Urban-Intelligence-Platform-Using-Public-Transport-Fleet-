@@ -156,17 +156,19 @@ export default function AadhaarLogin({ onSuccess }) {
         minHeight: 'calc(100vh - 40px)',
         background: 'var(--citizen-bg-gradient)',
         display: 'flex',
-        flexWrap: 'wrap'
+        flexWrap: 'wrap',
+        position: 'relative',
+        overflow: 'hidden'
       }}
     >
       {/* Left column: informational / trust content */}
       <div
         style={{
           flex: '1 1 480px',
-          padding: '56px 48px',
+          padding: '80px 48px',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'center'
+          justifyContent: 'flex-start'
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
@@ -209,7 +211,7 @@ export default function AadhaarLogin({ onSuccess }) {
             lineHeight: 1.2,
             color: 'var(--citizen-text-primary)',
             margin: '0 0 16px',
-            maxWidth: 520
+            textAlign: 'justify'
           }}
         >
           {t('heroTitle')}
@@ -217,17 +219,17 @@ export default function AadhaarLogin({ onSuccess }) {
 
         <p
           style={{
-            fontSize: 15,
+            fontSize: 16,
             lineHeight: 1.7,
             color: 'var(--citizen-text-secondary)',
-            margin: '0 0 32px',
+            margin: '0 0 64px',
             maxWidth: 500
           }}
         >
           {t('heroSubtitle')}
         </p>
 
-        <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginBottom: 32 }}>
+        <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginTop: 120, marginBottom: 32 }}>
           <StatCard
             icon={<PotholeIcon />}
             label={t('statReportedLabel')}
@@ -302,9 +304,9 @@ export default function AadhaarLogin({ onSuccess }) {
         style={{
           flex: '1 1 380px',
           display: 'flex',
-          alignItems: 'center',
+          alignItems: 'flex-start',
           justifyContent: 'center',
-          padding: 20
+          padding: '110px 20px 20px'
         }}
       >
         <div
@@ -431,7 +433,65 @@ export default function AadhaarLogin({ onSuccess }) {
           )}
         </div>
       </div>
+      
+      <DriftingBusGraphic />
     </div>
+  );
+}
+
+function DriftingBusGraphic() {
+  const images = [
+    { src: '/drifting/pothole.png', width: 190 },
+    { src: '/drifting/signs.png', width: 190 },
+    { src: '/drifting/waterlog.png', width: 190 }
+  ];
+
+  const trackSeconds = 18;
+
+  return (
+    <>
+      <style>{`
+        @keyframes marqueeScroll {
+          0%   { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+      `}</style>
+
+      <div
+        style={{
+          position: 'absolute',
+          top: '65%',
+          left: '30%',
+          width: '65%',
+          height: 200,
+          overflow: 'hidden',
+          pointerEvents: 'none',
+          WebkitMaskImage:
+            'linear-gradient(to left, transparent 0%, black 10%, black 90%, transparent 100%)',
+          maskImage:
+            'linear-gradient(to left, transparent 0%, black 10%, black 90%, transparent 100%)'
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 60,
+            width: 'max-content',
+            animation: `marqueeScroll ${trackSeconds}s linear infinite`
+          }}
+        >
+          {[...images, ...images].map(({ src, width }, i) => (
+            <img
+              key={i}
+              src={src}
+              alt=""
+              style={{ width, borderRadius: 13.5, flexShrink: 0 }}
+            />
+          ))}
+        </div>
+      </div>
+    </>
   );
 }
 
@@ -450,7 +510,7 @@ function StatCard({ icon, label, value, subtext, valueColor }) {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
         <span
           style={{
-            fontSize: 10,
+            fontSize: 12,
             fontWeight: 700,
             letterSpacing: 0.4,
             textTransform: 'uppercase',
@@ -461,10 +521,10 @@ function StatCard({ icon, label, value, subtext, valueColor }) {
         </span>
         {icon}
       </div>
-      <div style={{ fontSize: 22, fontWeight: 800, color: valueColor ?? 'var(--citizen-text-primary)' }}>
+      <div style={{ fontSize: 24, fontWeight: 800, color: valueColor ?? 'var(--citizen-text-primary)' }}>
         {value}
       </div>
-      <div style={{ fontSize: 11, color: 'var(--citizen-text-secondary)', marginTop: 2 }}>{subtext}</div>
+      <div style={{ fontSize: 14, color: 'var(--citizen-text-secondary)', marginTop: 2 }}>{subtext}</div>
     </div>
   );
 }
