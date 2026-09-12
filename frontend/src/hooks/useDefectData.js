@@ -29,7 +29,7 @@ function normalizeDetection(raw) {
     timestamp: raw.created_at,
     confidence: raw.confidence ?? null,
     vehicle_count: raw.vehicle_count ?? null,
-    img_url: toImageDataUrl(raw.img_url),
+    img_url: toImageDataUrl(raw.image_base64),
     location: raw.location ?? null,
     nearest_landmark: raw.nearest_landmark ?? null
   };

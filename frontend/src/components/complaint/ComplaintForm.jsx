@@ -5,7 +5,7 @@ const DEFECT_TYPE_OPTIONS = [
   { value: 'pothole', label: 'Pothole' },
   { value: 'waterlogging', label: 'Waterlogging' },
   { value: 'traffic_congestion', label: 'Traffic Congestion' },
-  { value: 'sign', label: 'Missing Sign' }
+  { value: 'sign', label: 'Sign' }
 ];
 
 function CameraIcon() {

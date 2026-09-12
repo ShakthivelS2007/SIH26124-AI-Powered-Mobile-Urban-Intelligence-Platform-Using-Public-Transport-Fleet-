@@ -14,7 +14,7 @@ export async function saveCitizenComplaint(complaintData) {
       longitude: complaintData.lng,
       location: complaintData.location,
       created_at: new Date().toISOString(),
-      img_url: complaintData.img_url // Alternatively uploaded via S3/Cloudinary first
+      image_base64: complaintData.img_url.split(',')[1] ?? complaintData.img_url
     })
   });
 
