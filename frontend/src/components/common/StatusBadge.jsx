@@ -1,8 +1,7 @@
-import { getDefectMeta, getDefectDisplayLabel } from '../../theme/tokens';
+import { getDefectMeta } from '../../theme/tokens';
 
 export default function StatusBadge({ defect }) {
   const meta = getDefectMeta(defect.type);
-  const label = getDefectDisplayLabel(defect);
 
   return (
     <span
@@ -26,7 +25,7 @@ export default function StatusBadge({ defect }) {
           background: meta.color
         }}
       />
-      {label}
+      {meta.label}
     </span>
   );
 }
