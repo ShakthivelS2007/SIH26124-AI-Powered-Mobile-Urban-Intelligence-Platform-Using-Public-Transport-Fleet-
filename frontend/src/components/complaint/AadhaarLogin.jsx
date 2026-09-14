@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useCitizenAccessibility } from '../../context/CitizenAccessibilityContext';
+import { Link } from 'react-router-dom';
 
 function formatAadhaar(value) {
   const digits = value.replace(/\D/g, '').slice(0, 12);
@@ -111,7 +112,7 @@ function PinOffIcon() {
 }
 
 export default function AadhaarLogin({ onSuccess }) {
-  const { t } = useCitizenAccessibility();
+  const { t, theme } = useCitizenAccessibility();
   const [step, setStep] = useState('aadhaar'); // 'aadhaar' | 'otp'
   const [aadhaarInput, setAadhaarInput] = useState('');
   const [otpInput, setOtpInput] = useState('');
@@ -154,7 +155,13 @@ export default function AadhaarLogin({ onSuccess }) {
     <div
       style={{
         minHeight: 'calc(100vh - 40px)',
-        background: 'var(--citizen-bg-gradient)',
+        backgroundImage:
+        theme === 'dark'
+          ? 'linear-gradient(180deg, rgba(11,18,32,0.55) 0%, rgba(17,24,39,0.65) 100%), url(/backgrounds/city-bg.png)'
+          : 'linear-gradient(180deg, rgba(239,246,255,0.25) 0%, rgba(248,250,252,0.4) 100%), url(/backgrounds/city-bg.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
         display: 'flex',
         flexWrap: 'wrap',
         position: 'relative',
@@ -165,10 +172,10 @@ export default function AadhaarLogin({ onSuccess }) {
       <div
         style={{
           flex: '1 1 480px',
-          padding: '80px 48px',
+          padding: '56px 48px',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'flex-start'
+          justifyContent: 'center'
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
@@ -222,14 +229,14 @@ export default function AadhaarLogin({ onSuccess }) {
             fontSize: 16,
             lineHeight: 1.7,
             color: 'var(--citizen-text-secondary)',
-            margin: '0 0 64px',
-            maxWidth: 500
+            margin: '0 0 32px',
+            maxWidth: 560
           }}
         >
           {t('heroSubtitle')}
         </p>
 
-        <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginTop: 120, marginBottom: 32 }}>
+        <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginBottom: 32 }}>
           <StatCard
             icon={<PotholeIcon />}
             label={t('statReportedLabel')}
@@ -304,6 +311,7 @@ export default function AadhaarLogin({ onSuccess }) {
         style={{
           flex: '1 1 380px',
           display: 'flex',
+          position: 'relative',
           alignItems: 'flex-start',
           justifyContent: 'center',
           padding: '110px 20px 20px'
@@ -312,12 +320,14 @@ export default function AadhaarLogin({ onSuccess }) {
         <div
           style={{
             width: '100%',
-            maxWidth: 420,
+             maxWidth: 420,
             background: 'var(--citizen-surface)',
             border: '1px solid var(--citizen-border)',
             borderRadius: 20,
             boxShadow: '0 12px 32px rgba(37, 99, 235, 0.1), 0 4px 12px rgba(15, 23, 42, 0.05)',
-            padding: 36
+            padding: 36,
+            position: 'relative',
+            zIndex: 1
           }}
         >
           <div
@@ -441,9 +451,9 @@ export default function AadhaarLogin({ onSuccess }) {
 
 function DriftingBusGraphic() {
   const images = [
-    { src: '/drifting/pothole.png', width: 190 },
-    { src: '/drifting/signs.png', width: 190 },
-    { src: '/drifting/waterlog.png', width: 190 }
+    { src: '/drifting/pothole.png', width: 250 },
+    { src: '/drifting/signs.png', width: 250 },
+    { src: '/drifting/waterlog.png', width: 250 }
   ];
 
   const trackSeconds = 18;
@@ -459,9 +469,6 @@ function DriftingBusGraphic() {
 
       <div
         style={{
-          position: 'absolute',
-          top: '65%',
-          left: '30%',
           width: '65%',
           height: 200,
           overflow: 'hidden',

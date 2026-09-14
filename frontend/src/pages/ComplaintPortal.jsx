@@ -252,7 +252,14 @@ function ComplaintPortalInner() {
       {!aadhaarDigits ? (
         <AadhaarLogin onSuccess={handleLoginSuccess} />
       ) : (
-        <div style={{ minHeight: '100vh', background: 'var(--citizen-bg-gradient)' }}>
+        <div
+          style={{
+            minHeight: '100vh',
+            backgroundImage: `radial-gradient(ellipse 900px 700px at 50% 420px, rgba(37,99,235,0.16), transparent 65%), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cline x1='0' y1='0' x2='120' y2='120' stroke='%232563eb' stroke-width='0.6' stroke-opacity='0.12'/%3E%3Cline x1='120' y1='0' x2='0' y2='120' stroke='%232563eb' stroke-width='0.6' stroke-opacity='0.12'/%3E%3Cline x1='60' y1='0' x2='60' y2='120' stroke='%232563eb' stroke-width='0.4' stroke-opacity='0.07'/%3E%3Cline x1='0' y1='60' x2='120' y2='60' stroke='%232563eb' stroke-width='0.4' stroke-opacity='0.07'/%3E%3Ccircle cx='0' cy='0' r='2.2' fill='%232563eb' fill-opacity='0.22'/%3E%3Ccircle cx='120' cy='0' r='2.2' fill='%232563eb' fill-opacity='0.22'/%3E%3Ccircle cx='0' cy='120' r='2.2' fill='%232563eb' fill-opacity='0.22'/%3E%3Ccircle cx='120' cy='120' r='2.2' fill='%232563eb' fill-opacity='0.22'/%3E%3Ccircle cx='60' cy='60' r='2.8' fill='%232563eb' fill-opacity='0.28'/%3E%3C/svg%3E"), var(--citizen-bg-gradient)`,
+            backgroundRepeat: 'no-repeat, repeat, no-repeat',
+            backgroundSize: 'auto, 120px 120px, cover'
+          }}
+        >
           <header
             style={{
               height: 76,
