@@ -1,5 +1,6 @@
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { useAutoVoice } from '../context/AutoVoiceContext';
+import { useAuth } from '../context/AuthContext';
 
 const NAV_ITEMS = [
   { to: '/dashboard', label: 'Dashboard' },
@@ -22,8 +23,8 @@ export default function Sidebar({ isOpen }) {
     >
       <div style={{ width: 'var(--sidebar-width)', padding: '24px 16px' }}>
         <Link to="/" style={{ display: 'block', padding: '0 8px', marginBottom: 32 }}>
-          <div style={{ color: '#fff', fontWeight: 700, fontSize: 18 }}>RoadWatch</div>
-          <div style={{ color: 'var(--color-sidebar-text)', fontSize: 11, letterSpacing: 0.5 }}>
+          <div style={{ color: '#fff', fontWeight: 700, fontSize: 22   }}>RoadWatch</div>
+          <div style={{ color: 'var(--color-sidebar-text)', fontSize: 12, letterSpacing: 0.5 }}>
             FLEET DEFECT MONITOR
           </div>
         </Link>
@@ -37,7 +38,7 @@ export default function Sidebar({ isOpen }) {
                 display: 'block',
                 padding: '10px 12px',
                 borderRadius: 8,
-                fontSize: 14,
+                fontSize: 16,
                 fontWeight: 500,
                 color: isActive ? 'var(--color-sidebar-text-active)' : 'var(--color-sidebar-text)',
                 background: isActive ? 'rgba(255,255,255,0.08)' : 'transparent'
@@ -49,8 +50,40 @@ export default function Sidebar({ isOpen }) {
         </nav>
 
         <AutoVoiceToggle />
+        <LogoutButton />
       </div>
     </aside>
+  );
+}
+
+function LogoutButton() {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  function handleLogout() {
+    logout();
+    navigate('/login');
+  }
+
+  return (
+    <button
+      onClick={handleLogout}
+      style={{
+        width: '100%',
+        marginTop: 8,
+        padding: '10px 12px',
+        fontSize: 15,
+        fontWeight: 500,
+        color: 'var(--color-sidebar-text)',
+        background: 'transparent',
+        border: 'none',
+        borderRadius: 8,
+        cursor: 'pointer',
+        textAlign: 'left'
+      }}
+    >
+      Logout
+    </button>
   );
 }
 
@@ -69,7 +102,7 @@ function AutoVoiceToggle() {
         padding: '10px 12px'
       }}
     >
-      <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--color-sidebar-text)' }}>
+      <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--color-sidebar-text)' }}>
         🔊 Auto Voice
       </span>
       <button

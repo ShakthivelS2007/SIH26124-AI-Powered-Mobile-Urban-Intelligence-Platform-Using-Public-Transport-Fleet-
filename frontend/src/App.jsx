@@ -3,17 +3,20 @@ import AppRoutes from './routes/AppRoutes';
 import { SearchProvider } from './context/SearchContext';
 import { LanguageProvider } from './context/LanguageContext';
 import { AutoVoiceProvider } from './context/AutoVoiceContext';
+import { AuthProvider } from './context/AuthContext';
 
 export default function App() {
   return (
     <BrowserRouter>
-      <LanguageProvider>
-        <AutoVoiceProvider>
-          <SearchProvider>
-            <AppRoutes />
-          </SearchProvider>
-        </AutoVoiceProvider>
-      </LanguageProvider>
+      <AuthProvider>
+        <LanguageProvider>
+          <AutoVoiceProvider>
+            <SearchProvider>
+              <AppRoutes />
+            </SearchProvider>
+          </AutoVoiceProvider>
+        </LanguageProvider>
+      </AuthProvider>
     </BrowserRouter>
   );
 }
