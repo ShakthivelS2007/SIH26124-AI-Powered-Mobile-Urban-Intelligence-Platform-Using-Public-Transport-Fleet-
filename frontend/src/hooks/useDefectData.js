@@ -4,14 +4,13 @@ import { reverseGeocodeBatch } from '../utils/reverseGeocode';
 import { findNearestLandmarkBatch, formatLandmark } from '../utils/nearestLandmark';
 import { DETECTIONS_ENDPOINT } from '../config';
 import { useAutoVoice } from '../context/AutoVoiceContext';
-import { queueSpeak, buildDefectSpeech } from '../utils/textToSpeech';
+import { queueSpeak, buildDefectSpeech, stopAutoVoice } from '../utils/textToSpeech';
 
 const POLL_INTERVAL_MS = 3000;
 
 function toImageBlobUrl(rawBase64) {
   if (!rawBase64) return null;
 
-  // Already a real URL or blob URL - nothing to convert.
   if (rawBase64.startsWith('http') || rawBase64.startsWith('blob:')) return rawBase64;
 
   const base64Data = rawBase64.startsWith('data:')
@@ -60,14 +59,13 @@ export default function useDefectData() {
   const [error, setError] = useState(null);
   const seenIdsRef = useRef(new Set());
   const lastSeenIdRef = useRef(0);
-  const geocodeInFlightRef = useRef(false);
-  const landmarkInFlightRef = useRef(false);
   const isFirstFetchRef = useRef(true);
   const { isAutoVoiceOn } = useAutoVoice();
   const isAutoVoiceOnRef = useRef(isAutoVoiceOn);
+  const hasRealDataRef = useRef(false);
+
   isAutoVoiceOnRef.current = isAutoVoiceOn;
 
-  // Polls the backend for new detections and appends them.
   useEffect(() => {
     let cancelled = false;
 
@@ -92,7 +90,11 @@ export default function useDefectData() {
           newOnes.forEach((d) => seenIdsRef.current.add(d.id));
           const maxId = Math.max(...rawList.map((raw) => Number(raw.id)));
           if (maxId > lastSeenIdRef.current) lastSeenIdRef.current = maxId;
-          setDefects((current) => sortByBusId([...current, ...newOnes]));
+                              setDefects((current) => {
+            const base = hasRealDataRef.current ? current : [];
+            return sortByBusId([...base, ...newOnes]);
+          });
+          hasRealDataRef.current = true;
 
           if (isAutoVoiceOnRef.current && !isFirstFetchRef.current) {
             newOnes.forEach((d) => queueSpeak(buildDefectSpeech(d)));
@@ -116,11 +118,33 @@ export default function useDefectData() {
       clearInterval(intervalId);
     };
   }, []);
+    
+  useEffect(() => {
+    fetch('data/defects.json')
+      .then((res) => res.json())
+      .then((rawList) => {
+        if (hasRealDataRef.current) return; // backend already answered first
+        const placeholders = rawList.map((d) => ({
+          id: String(d.id),
+          bus_id: d.bus_id,
+          type: d.type,
+          condition: d.condition ?? null,
+          lat: d.lat,
+          lng: d.lng,
+          timestamp: d.timestamp,
+          confidence: d.confidence ?? null,
+          vehicle_count: d.vehicle_count ?? null,
+          img_url: d.img_url ?? null,
+          location: d.location ?? null,
+          nearest_landmark: d.nearest_landmark ?? null
+        }));
+        setDefects(sortByBusId(placeholders));
+      })
+      .catch(() => {
+        // No placeholder file available — just wait for the backend.
+      });
+  }, []);
 
-  // Backfills location/landmark for whatever is currently missing them,
-  // re-sweeping the FULL list (not just newly-arrived items) every time
-  // `defects` changes. This guarantees nothing gets permanently skipped
-  // just because a batch was already in flight when it arrived.
   useEffect(() => {
     let cancelled = false;
 
@@ -163,8 +187,15 @@ export default function useDefectData() {
     return () => {
       cancelled = true;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [defects]);
+  
+  useEffect(() => {
+    if (!isAutoVoiceOn) {
+      stopAutoVoice();
+      return;
+    }
+    defects.forEach((d) => queueSpeak(buildDefectSpeech(d)));
+  }, [isAutoVoiceOn]);
 
   return { defects, loading, error };
 }

@@ -85,14 +85,19 @@ export async function speak(text, languageCode = 'en-IN') {
   await currentAudio.play();
 }
 
-// Appends to a sequential queue instead of interrupting - used for
-// auto-voice, so multiple detections arriving close together get read
-// out one after another rather than talking over each other.
 export function queueSpeak(text, languageCode = 'en-IN') {
   autoVoiceQueue.push({ text, languageCode });
   if (!isProcessingQueue) {
     processAutoVoiceQueue();
   }
+}
+
+export function stopAutoVoice() {
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio.currentTime = 0;
+  }
+  autoVoiceQueue.length = 0;
 }
 
 async function processAutoVoiceQueue() {

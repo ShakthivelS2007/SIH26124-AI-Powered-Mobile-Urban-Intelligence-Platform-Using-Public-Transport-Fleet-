@@ -10,7 +10,7 @@ export default function DefectMap({ defects }) {
       center={DEFAULT_CENTER}
       zoom={DEFAULT_ZOOM}
       style={{ width: '100%', height: '100%' }}
-      scrollWheelZoom={false}
+      scrollWheelZoom={true}
     >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

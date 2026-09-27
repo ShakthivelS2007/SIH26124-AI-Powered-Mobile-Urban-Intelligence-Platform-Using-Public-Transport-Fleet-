@@ -10,10 +10,9 @@ export default function CongestionHeatmap({ points }) {
       center={DEFAULT_CENTER}
       zoom={DEFAULT_ZOOM}
       style={{ width: '100%', height: '100%' }}
-      scrollWheelZoom={false}
+      scrollWheelZoom={true}
     >
       <TileLayer
-        attribution='&copy; OpenStreetMap contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       <CongestionHeatLayer points={points} />

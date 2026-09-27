@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Card from '../components/common/Card';
 import StatusBadge from '../components/common/StatusBadge';
-import useDefectData from '../hooks/useDefectData';
+import { useDefectDataContext } from '../context/DefectDataContext';
 
 export default function DefectDetail() {
   const { id } = useParams();
-  const { defects, loading } = useDefectData();
+  const { defects, loading } = useDefectDataContext();
   const [imgFailed, setImgFailed] = useState(false);
 
   if (loading) {

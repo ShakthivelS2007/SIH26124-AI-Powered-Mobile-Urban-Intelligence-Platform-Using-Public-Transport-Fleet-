@@ -3,7 +3,7 @@ import StatusBadge from '../common/StatusBadge';
 import { speak, buildDefectSpeech } from '../../utils/textToSpeech';
 import { useLanguage } from '../../context/LanguageContext';
 
-export default function DefectRow({ defect }) {
+export default function DefectRow({ defect , onHover}) {
   const navigate = useNavigate();
   const { language }  = useLanguage();
 
@@ -17,8 +17,14 @@ export default function DefectRow({ defect }) {
     <tr
       onClick={() => navigate(`/defect/${defect.id}`)}
       style={{ cursor: 'pointer' }}
-      onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--color-app-bg)')}
-      onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.background = 'var(--color-app-bg)';
+        onHover?.(defect);
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.background = 'transparent';
+        onHover?.(null);
+      }}
     >
       <td style={cellStyle}>{defect.bus_id}</td>
       <td style={cellStyle}>

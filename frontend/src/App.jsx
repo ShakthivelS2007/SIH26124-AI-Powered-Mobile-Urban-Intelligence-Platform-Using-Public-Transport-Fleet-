@@ -4,6 +4,7 @@ import { SearchProvider } from './context/SearchContext';
 import { LanguageProvider } from './context/LanguageContext';
 import { AutoVoiceProvider } from './context/AutoVoiceContext';
 import { AuthProvider } from './context/AuthContext';
+import { DefectDataProvider } from './context/DefectDataContext';
 
 export default function App() {
   return (
@@ -11,8 +12,10 @@ export default function App() {
       <AuthProvider>
         <LanguageProvider>
           <AutoVoiceProvider>
-            <SearchProvider>
-              <AppRoutes />
+            <SearchProvider>    
+              <DefectDataProvider>
+                <AppRoutes />
+              </DefectDataProvider>
             </SearchProvider>
           </AutoVoiceProvider>
         </LanguageProvider>
