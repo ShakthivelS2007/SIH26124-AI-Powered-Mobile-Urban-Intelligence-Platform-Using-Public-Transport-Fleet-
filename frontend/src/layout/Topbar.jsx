@@ -1,7 +1,6 @@
-import SidebarToggleButton from '../components/common/SidebarToggleButton';
 import { useBusIdSearch } from '../context/SearchContext';
 
-export default function Topbar({ title, isSidebarOpen, onToggleSidebar, showSearch }) {
+export default function Topbar({ title, showSearch }) {
   const { busIdQuery, setBusIdQuery } = useBusIdSearch();
 
   return (
@@ -17,7 +16,6 @@ export default function Topbar({ title, isSidebarOpen, onToggleSidebar, showSear
         flexShrink: 0
       }}
     >
-      <SidebarToggleButton isOpen={isSidebarOpen} onToggle={onToggleSidebar} />
       <h1 style={{ fontSize: 16, fontWeight: 700, margin: 0, whiteSpace: 'nowrap' }}>{title}</h1>
 
       {showSearch && (

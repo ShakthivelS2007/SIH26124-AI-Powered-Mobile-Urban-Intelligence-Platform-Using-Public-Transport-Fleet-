@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import Card from '../components/common/Card';
 import StatusBadge from '../components/common/StatusBadge';
 import { useDefectDataContext } from '../context/DefectDataContext';
+import DefectMap from '../components/map/DefectMap';
 
 export default function DefectDetail() {
   const { id } = useParams();
@@ -27,49 +28,61 @@ export default function DefectDetail() {
   const showImage = defect.img_url && !imgFailed;
 
   return (
-    <div style={{ maxWidth: 640 }}>
+    <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
       <Link to="/dashboard" style={{ color: 'var(--color-text-secondary)', fontSize: 13 }}>
         &larr; Back to Dashboard
       </Link>
 
-      <Card style={{ marginTop: 16, overflow: 'hidden' }}>
-        {showImage ? (
-          <img
-            src={defect.img_url}
-            alt={`Detected ${defect.type}`}
-            onError={() => setImgFailed(true)}
-            style={{ width: '100%', display: 'block' }}
-          />
-        ) : (
-          <div
-            style={{
-              width: '100%',
-              height: 200,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              background: 'var(--color-app-bg)',
-              color: 'var(--color-text-secondary)',
-              fontSize: 13
-            }}
-          >
-            {defect.img_url ? 'Snapshot failed to load' : 'No snapshot available'}
-          </div>
-        )}
+      <div style={{ display: 'flex', gap: 20, marginTop: 16, alignItems: 'stretch', flex: 1, minHeight: 0 }}>
+        <Card style={{ flex: '1 1 0', minWidth: 0, overflow: 'auto' }}>
+          {showImage ? (
+            <img
+              src={defect.img_url}
+              alt={`Detected ${defect.type}`}
+              onError={() => setImgFailed(true)}
+              style={{ width: '100%', display: 'block' }}
+            />
+          ) : (
+            <div
+              style={{
+                width: '100%',
+                height: 200,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: 'var(--color-app-bg)',
+                color: 'var(--color-text-secondary)',
+                fontSize: 13
+              }}
+            >
+              {defect.img_url ? 'Snapshot failed to load' : 'No snapshot available'}
+            </div>
+          )}
 
-        <div style={{ padding: 20 }}>
-          <div style={{ marginBottom: 12 }}>
-            <StatusBadge defect={defect} />
-          </div>
+          <div style={{ padding: 20 }}>
+            <div style={{ marginBottom: 12 }}>
+              <StatusBadge defect={defect} />
+            </div>
 
-          <DetailRow label="Bus ID" value={defect.bus_id} />
-          <DetailRow label="Location" value={defect.location ?? '—'} />
-          <DetailRow label="Nearest Landmark" value={defect.nearest_landmark ?? '—'} />
-          <DetailRow label="Latitude" value={defect.lat} />
-          <DetailRow label="Longitude" value={defect.lng} />
-          <DetailRow label="Detected at" value={new Date(defect.timestamp).toLocaleString()} />
-        </div>
-      </Card>
+            <DetailRow label="Bus ID" value={defect.bus_id} />
+            <DetailRow label="Location" value={defect.location ?? '—'} />
+            <DetailRow label="Nearest Landmark" value={defect.nearest_landmark ?? '—'} />
+            <DetailRow label="Latitude" value={defect.lat} />
+            <DetailRow label="Longitude" value={defect.lng} />
+            <DetailRow label="Detected at" value={new Date(defect.timestamp).toLocaleString()} />
+          </div>
+        </Card>
+        <Card style={{ flex: '1 1 0', minWidth: 0, minHeight: 400, overflow: 'hidden', display: 'flex' }}>
+          <div style={{ flex: 1, minHeight: 400 }}>
+            <DefectMap
+              key={defect.id}
+              defects={[defect]}
+              flyTo={[defect.lat, defect.lng]}
+              flyToZoom={17}
+            />
+          </div>
+        </Card>
+      </div>
     </div>
   );
 }

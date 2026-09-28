@@ -1,3 +1,4 @@
+import { useState } from 'react'; 
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { useAutoVoice } from '../context/AutoVoiceContext';
 import { useAuth } from '../context/AuthContext';
@@ -9,36 +10,60 @@ const NAV_ITEMS = [
 ];
 
 
-export default function Sidebar({ isOpen }) {
+export default function Sidebar() {
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
-    <aside
-      style={{
-        width: isOpen ? 'var(--sidebar-width)' : 'var(--sidebar-width-collapsed)',
-        overflow: 'hidden',
-        background: 'var(--color-sidebar-bg)',
-        transition: 'width 0.2s ease',
-        flexShrink: 0,
-        height: '100%'
-      }}
-    >
-      <div style={{ width: 'var(--sidebar-width)', padding: '24px 16px' }}>
-        <Link to="/" style={{ display: 'block', padding: '0 8px', marginBottom: 32 }}>
-          <div style={{ color: '#fff', fontWeight: 700, fontSize: 22   }}>RoadWatch</div>
-          <div style={{ color: 'var(--color-sidebar-text)', fontSize: 12, letterSpacing: 0.5 }}>
+    <>
+      {/* thin hover strip so there's something to hover when the bar is hidden */}
+      <div
+        onMouseEnter={() => setIsHovered(true)}
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: 6,
+          background: 'var(--color-sidebar-bg)',
+          zIndex: 2000
+        }}
+      />
+      <aside
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: 64,
+          background: 'var(--color-sidebar-bg)',
+          transform: isHovered ? 'translateY(0)' : 'translateY(-100%)',
+          transition: 'transform 0.25s ease',
+          zIndex: 2001,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 32,
+          padding: '0 24px'
+        }}
+      >
+        <Link to="/" style={{ display: 'block' }}>
+          <div style={{ color: '#fff', fontWeight: 700, fontSize: 20, lineHeight: 1.1 }}>RoadWatch</div>
+          <div style={{ color: 'var(--color-sidebar-text)', fontSize: 10, letterSpacing: 0.5 }}>
             FLEET DEFECT MONITOR
           </div>
         </Link>
 
-                <nav style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+        <nav style={{ display: 'flex', flexDirection: 'row', gap: 4 }}>
           {NAV_ITEMS.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
               style={({ isActive }) => ({
                 display: 'block',
-                padding: '10px 12px',
+                padding: '8px 14px',
                 borderRadius: 8,
-                fontSize: 16,
+                fontSize: 15,
                 fontWeight: 500,
                 color: isActive ? 'var(--color-sidebar-text-active)' : 'var(--color-sidebar-text)',
                 background: isActive ? 'rgba(255,255,255,0.08)' : 'transparent'
@@ -49,10 +74,12 @@ export default function Sidebar({ isOpen }) {
           ))}
         </nav>
 
-        <AutoVoiceToggle />
-        <LogoutButton />
-      </div>
-    </aside>
+        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 16 }}>
+          <AutoVoiceToggle />
+          <LogoutButton />
+        </div>
+      </aside>
+    </>
   );
 }
 
@@ -69,8 +96,6 @@ function LogoutButton() {
     <button
       onClick={handleLogout}
       style={{
-        width: '100%',
-        marginTop: 8,
         padding: '10px 12px',
         fontSize: 15,
         fontWeight: 500,
@@ -79,7 +104,7 @@ function LogoutButton() {
         border: 'none',
         borderRadius: 8,
         cursor: 'pointer',
-        textAlign: 'left'
+        whiteSpace: 'nowrap'
       }}
     >
       Logout
@@ -93,13 +118,9 @@ function AutoVoiceToggle() {
   return (
     <div
       style={{
-        marginTop: 20,
-        paddingTop: 16,
-        borderTop: '1px solid rgba(255,255,255,0.08)',
         display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '10px 12px'
+        alignItems: 'ce nter',
+        gap: 10
       }}
     >
       <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--color-sidebar-text)' }}>

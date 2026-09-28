@@ -1,13 +1,48 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import DefectRow from './DefectRow';
 
 export default function DefectTable({ defects }) {
   const [hoveredDefect, setHoveredDefect] = useState(null);
+  const [selectedType, setSelectedType] = useState('all');
+
+  const typeOptions = useMemo(
+    () => [...new Set(defects.map((d) => d.type))].sort(),
+    [defects]
+  );
+
+  const visibleDefects = useMemo(
+    () => (selectedType === 'all' ? defects : defects.filter((d) => d.type === selectedType)),
+    [defects, selectedType]
+  );
 
     return (
     <div>
-      <div style={{ overflow: 'auto', maxHeight: 300 }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
+      <div style={{ marginBottom: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
+        <label style={{ fontSize: 16, color: 'var(--color-text-secondary)' }}>Filter by type:</label>
+        <select
+          value={selectedType}
+          onChange={(e) => {
+            setSelectedType(e.target.value);
+            setHoveredDefect(null);
+          }}
+          style={{
+            padding: '6px 10px',
+            borderRadius: 8,
+            border: '1px solid var(--color-border)',
+            background: 'var(--color-surface)',
+            fontSize: 13
+          }}
+        >
+          <option value="all">All</option>
+          {typeOptions.map((t) => (
+            <option key={t} value={t}>
+              {t.replace(/_/g, ' ').replace(/^\w/, (c) => c.toUpperCase())}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div style={{ overflow: 'auto', maxHeight: 350 }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 16 }}>
           <thead>
             <tr style={{ textAlign: 'left', color: 'var(--color-text-secondary)' }}>
               <th style={headerStyle}>Bus ID</th>
@@ -19,10 +54,10 @@ export default function DefectTable({ defects }) {
             </tr>
           </thead>
           <tbody>
-            {defects.map((defect) => (
+            {visibleDefects.map((defect) => (
               <DefectRow key={defect.id} defect={defect} onHover={setHoveredDefect} />
             ))}
-            {defects.length === 0 && (
+            {visibleDefects.length === 0 && (
               <tr>
                 <td colSpan={6} style={{ padding: 20, color: 'var(--color-text-secondary)' }}>
                   No defects detected yet.
