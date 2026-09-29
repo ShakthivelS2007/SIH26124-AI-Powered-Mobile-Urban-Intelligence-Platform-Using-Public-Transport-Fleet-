@@ -5,7 +5,7 @@
     "lat": 13.0827,
     "lng": 80.2707,
     "type": "pothole",
-    "timestamp": "2026-09-28T08:14:00+05:30",
+    "timestamp": "2026-09-29T08:14:00+05:30",
     "img_url": "images/pothole.jpg"
   },
   {
@@ -14,7 +14,7 @@
     "lat": 13.0604,
     "lng": 80.2496,	
     "type": "traffic_congestion",
-    "timestamp": "2026-09-28T08:23:00+05:30",
+    "timestamp": "2026-09-29T08:23:00+05:30",
      "intensity": 2.0,
      "vehicle_count": 12,
     "img_url": "https://placehold.co/600x400?text=Congestion+4410"
@@ -25,7 +25,7 @@
     "lat": 13.0475,
     "lng": 80.2201,
     "type": "pothole",
-    "timestamp": "2026-09-28T08:32:00+05:30",
+    "timestamp": "2026-09-29T08:32:00+05:30",
     "img_url": "https://placehold.co/600x400?text=Pothole+1142b"
   },
   {
@@ -34,7 +34,7 @@
     "lat": 13.0359,
     "lng": 80.245,
     "type": "waterlogging",
-    "timestamp": "2026-09-28T08:41:00+05:30",
+    "timestamp": "2026-09-29T08:41:00+05:30",
     "img_url": "https://placehold.co/600x400?text=Waterlogging+7723"
   },
   {
@@ -43,7 +43,7 @@
     "lat": 13.07,
     "lng": 80.23,
     "type": "traffic_congestion",
-    "timestamp": "2026-09-28T08:50:00+05:30",
+    "timestamp": "2026-09-29T08:50:00+05:30",
     "intensity": 1.6,
      "vehicle_count": 10,
     "img_url": "https://placehold.co/600x400?text=Congestion+4410b"
@@ -54,7 +54,7 @@
     "lat": 13.0655,
     "lng": 80.244,
     "type": "traffic_congestion",
-    "timestamp": "2026-09-28T08:58:00+05:30",
+    "timestamp": "2026-09-29T08:58:00+05:30",
     "intensity": 1.2,
      "vehicle_count": 8,
     "img_url": "https://placehold.co/600x400?text=Congestion+4410c"
@@ -65,7 +65,7 @@
     "lat": 13.068,
     "lng": 80.247,
     "type": "traffic_congestion",
-    "timestamp": "2026-09-28T09:05:00+05:30",
+    "timestamp": "2026-09-29T09:05:00+05:30",
     "intensity": 1.0,
      "vehicle_count": 5,
     "img_url": "https://placehold.co/600x400?text=Congestion+7723"
@@ -76,7 +76,7 @@
     "lat": 13.0369,
     "lng": 80.0437,
     "type": "pothole",
-    "timestamp": "2026-09-28T08:14:00+05:30",
+    "timestamp": "2026-09-29T08:14:00+05:30",
     "img_url": "https://placehold.co/600x400?text=Pothole+1142"
   }
 ]
