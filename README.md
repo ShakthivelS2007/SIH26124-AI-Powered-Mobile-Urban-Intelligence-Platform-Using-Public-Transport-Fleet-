@@ -1,3 +1,107 @@
-=======================================
-      Project under development
-=======================================
+<div align="center">
+
+# 🚌 HelioWatch
+
+### AI-Powered Mobile Urban Intelligence Platform Using Public Transport Fleet
+
+*Turning everyday bus routes into a live, city-wide road-health sensor network.*
+
+![SIH 2026](https://img.shields.io/badge/SIH-2026-orange?style=for-the-badge)
+![Problem Statement](https://img.shields.io/badge/PS-SIH26124-blue?style=for-the-badge)
+![Team](https://img.shields.io/badge/Team-Arsene-black?style=for-the-badge)
+
+![React](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=black)
+![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostGIS-4169E1?logo=postgresql&logoColor=white)
+![YOLOv8](https://img.shields.io/badge/YOLOv8-00FFFF?logo=yolo&logoColor=black)
+![Leaflet](https://img.shields.io/badge/Leaflet-199900?logo=leaflet&logoColor=white)
+
+</div>
+
+---
+
+## 💡 The Idea
+
+Municipal buses already cover most of a city, every single day. **HelioWatch** mounts a dashcam on them and runs a computer-vision model to spot road defects as the bus drives. Each detection is stamped with GPS and sent to a live dashboard, so civic teams can see and prioritise repairs without a single dedicated survey vehicle.
+
+## ✨ Features
+
+- 🕳️ **Pothole detection** with a custom-trained YOLOv8n model
+- 📍 **Geo-tagged events** stored in PostGIS, with **25 m / 24 h de-duplication** so one pothole = one record
+- 🗺️ **Live dashboard** with defect map, stat cards, and a searchable table sorted by bus
+- 🔥 **Congestion heatmap** on the Reports page
+- 🗣️ **Citizen complaint portal** with AI-verified complaints, Aadhaar-style login, accessibility bar, voice readout, and multilingual UI (EN / தமிழ் / हिन्दी)
+- 🔊 **Auto-voice alerts** that read out new detections as they arrive
+
+## 🏗️ How It Works
+
+```mermaid
+flowchart LR
+    A[🚌 Bus Dashcam] --> B[🧠 YOLOv8 Model]
+    B -->|type, GPS, confidence, crop| C[⚡ FastAPI]
+    F[🧑 Citizen] --> G[📝 Complaint Portal]
+    G -->|photo + location| C
+    C -->|verify complaint| B
+    B -->|verified result| C
+    C --> D[(🐘 PostgreSQL + PostGIS)]
+    C -->|polls every 3s| E[💻 React Dashboard]
+```
+
+Citizen complaints take the same path as bus detections: the portal sends them to FastAPI, the model verifies the reported defect, and only verified results are stored and shown on the dashboard.
+
+## 🧰 Tech Stack
+
+| Layer | Tools |
+|---|---|
+| **Frontend** | React, Vite, React Router, Leaflet, leaflet.heat |
+| **Backend** | FastAPI, SQLAlchemy, GeoAlchemy2, Shapely |
+| **Database** | PostgreSQL + PostGIS |
+| **AI Model** | YOLOv8n (PyTorch `.pt` + ONNX export) |
+
+## 📁 Project Structure
+
+```
+├── backend/    FastAPI app, DB models, schema.sql, smoke test
+├── frontend/   React dashboard + citizen complaint portal
+└── model/      Trained YOLOv8 weights (best.pt, best.onnx)
+```
+
+## 🚀 Quick Start
+
+**1. Database**
+```bash
+psql -U postgres -d your_db -f backend/schema.sql
+```
+
+**2. Backend**
+```bash
+cd backend
+pip install -r requirements.txt
+echo "DATABASE_URL=postgresql://user:pass@localhost:5432/your_db" > .env
+uvicorn main:app --reload        # docs at http://127.0.0.1:8000/docs
+python test_send_events.py       # optional: send sample detections
+```
+
+**3. Frontend**
+```bash
+cd frontend
+npm install
+npm run dev
+```
+> Point `API_BASE_URL` in `src/config.js` to your backend URL.
+
+## 🔌 API at a Glance
+
+| Method | Endpoint | Purpose |
+|---|---|---|
+| `POST` | `/api/detections` | Submit a detection from the bus |
+| `GET` | `/api/detections` | List detections (`?type=`, `?after_id=`) |
+| `GET` | `/api/detections/nearby/search` | Detections within a radius of a point |
+| `GET` | `/api/dashboard/statistics` | Counts by defect type |
+
+## 👥 Team Arsene
+
+Built for **Smart India Hackathon 2026** · Problem Statement **SIH26124**
+
+---
