@@ -8,14 +8,13 @@
 
 ![SIH 2026](https://img.shields.io/badge/SIH-2026-orange?style=for-the-badge)
 ![Problem Statement](https://img.shields.io/badge/PS-SIH26124-blue?style=for-the-badge)
-<img src="assets/SIHLOGO.png" alt="Team Arsene logo" width="80" />
 ![Team](https://img.shields.io/badge/Team-Arsene-black?style=for-the-badge)
 
 ![React](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=black)
 ![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostGIS-4169E1?logo=postgresql&logoColor=white)
-![YOLOv8](https://img.shields.io/badge/YOLOv8-00FFFF?logo=yolo&logoColor=black)
+![YOLO28n](https://img.shields.io/badge/YOLO28n-00FFFF?logo=yolo&logoColor=black)
 ![Leaflet](https://img.shields.io/badge/Leaflet-199900?logo=leaflet&logoColor=white)
 
 </div>
@@ -44,18 +43,35 @@ Municipal buses already cover most of a city, every single day. **HelioWatch** m
 ## 🏗️ How It Works
 
 ```mermaid
+%%{init: {'flowchart': {'nodeSpacing': 50, 'rankSpacing': 80, 'curve': 'basis'}}}%%
 flowchart LR
-    A[🚌 Bus Dashcam] --> B[🧠 YOLOv8 Model]
-    B -->|type, GPS, confidence, crop| C[⚡ FastAPI]
-    F[🧑 Citizen] --> G[📝 Complaint Portal]
+    A([🚌 Bus Dashcam]) --> B[🧠 YOLOv28n Model]
+    F([🧑 Citizen]) --> G[📝 Complaint Portal]
+
+    B -->|type, GPS, confidence, crop| C{{⚡ FastAPI}}
     G -->|photo + location| C
     C -->|verify complaint| B
     B -->|verified result| C
-    C --> D[(🐘 PostgreSQL + PostGIS)]
+
+    C -->|store| D[(🐘 PostgreSQL + PostGIS)]
+    D -->|query results| C
     C -->|polls every 3s| E[💻 React Dashboard]
+
+    classDef source fill:#e0f2fe,stroke:#0284c7,stroke-width:2px,color:#0f172a
+    classDef ai fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#0f172a
+    classDef core fill:#dcfce7,stroke:#16a34a,stroke-width:3px,color:#0f172a
+    classDef store fill:#ede9fe,stroke:#7c3aed,stroke-width:2px,color:#0f172a
+
+    class A,F source
+    class B,G ai
+    class C core
+    class D,E store
+
+    linkStyle default stroke:#64748b,stroke-width:2px
 ```
 
 Citizen complaints take the same path as bus detections: the portal sends them to FastAPI, the model verifies the reported defect, and only verified results are stored and shown on the dashboard.
+
 
 ## 🧰 Tech Stack
 
@@ -64,7 +80,7 @@ Citizen complaints take the same path as bus detections: the portal sends them t
 | **Frontend** | React, Vite, React Router, Leaflet, leaflet.heat |
 | **Backend** | FastAPI, SQLAlchemy, GeoAlchemy2, Shapely |
 | **Database** | PostgreSQL + PostGIS |
-| **AI Model** | YOLOv8n (PyTorch `.pt` + ONNX export) |
+| **AI Model** | YOLOv28n (PyTorch `.pt` + ONNX export) |
 
 ## 📁 Project Structure
 
@@ -110,5 +126,9 @@ npm run dev
 ## 👥 Team Arsene
 
 Built for **Smart India Hackathon 2026** · Problem Statement **SIH26124**
+<div>
+  <img src="assets/image.png" alt="Team Arsene logo" width="180"/>
+</div>
 
 ---
+
