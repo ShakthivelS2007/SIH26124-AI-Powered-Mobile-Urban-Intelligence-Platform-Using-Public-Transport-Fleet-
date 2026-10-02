@@ -27,7 +27,13 @@ Municipal buses already cover most of a city, every single day. **HelioWatch** m
 
 ## ✨ Features
 
-- 🕳️ **Pothole detection** with a custom-trained YOLOv8n model
+- 🧠 **Multi-defect AI detection** using custom-trained YOLOv8n models:
+  - 🕳️ Potholes
+  - 🌊 Waterlogging
+  - 🪧 Road signs (good / damaged condition)
+  - 🚸 Zebra crossings
+  - 🚶 Pedestrians at risk
+  - 🚨 Hit-and-run incidents
 - 📍 **Geo-tagged events** stored in PostGIS, with **25 m / 24 h de-duplication** so one pothole = one record
 - 🗺️ **Live dashboard** with defect map, stat cards, and a searchable table sorted by bus
 - 🔥 **Congestion heatmap** on the Reports page
@@ -64,7 +70,7 @@ Citizen complaints take the same path as bus detections: the portal sends them t
 ```
 ├── backend/    FastAPI app, DB models, schema.sql, smoke test
 ├── frontend/   React dashboard + citizen complaint portal
-└── model/      Trained YOLOv8 weights (best.pt, best.onnx)
+└── model/      Trained YOLOv8 weights (.pt + ONNX export)
 ```
 
 ## 🚀 Quick Start
