@@ -8,6 +8,7 @@
 
 ![SIH 2026](https://img.shields.io/badge/SIH-2026-orange?style=for-the-badge)
 ![Problem Statement](https://img.shields.io/badge/PS-SIH26124-blue?style=for-the-badge)
+<img src="assets/SIHLOGO.png" alt="Team Arsene logo" width="80" />
 ![Team](https://img.shields.io/badge/Team-Arsene-black?style=for-the-badge)
 
 ![React](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=black)
