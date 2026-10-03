@@ -141,7 +141,7 @@ export default function Home() {
         }}
       >
         <Link to="/" style={{ display: 'block' }}>
-          <div style={{ fontSize: 18, fontWeight: 700, color: '#ffffff' }}>RoadWatch</div>
+          <div style={{ fontSize: 18, fontWeight: 700, color: '#ffffff' }}>HelioWatch</div>
           <div
             style={{
               fontSize: 11,
@@ -429,7 +429,7 @@ export default function Home() {
           >
             <img
               src="/screenshots/dashboard-preview.png"
-              alt="RoadWatch dashboard preview"
+              alt="HelioWatch dashboard preview"
               style={{ width: '100%', display: 'block' }}
             />
           </div>
