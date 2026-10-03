@@ -19,7 +19,7 @@ export default function Reports() {
         <p style={{ margin: '4px 0 0', color: 'var(--color-text-secondary)', fontSize: 13 }}>
           Density of congestion events reported by the fleet.
         </p>
-        {false error && (
+        {false && error && (
           <p style={{ color: 'var(--color-status-red)', fontSize: 13 }}>
             Couldn&apos;t refresh data: {error}
           </p>
