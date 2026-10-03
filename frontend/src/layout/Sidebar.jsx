@@ -48,7 +48,7 @@ export default function Sidebar() {
         }}
       >
         <Link to="/" style={{ display: 'block' }}>
-          <div style={{ color: '#fff', fontWeight: 700, fontSize: 20, lineHeight: 1.1 }}>RoadWatch</div>
+          <div style={{ color: '#fff', fontWeight: 700, fontSize: 20, lineHeight: 1.1 }}>HelioWatch</div>
           <div style={{ color: 'var(--color-sidebar-text)', fontSize: 10, letterSpacing: 0.5 }}>
             FLEET DEFECT MONITOR
           </div>
