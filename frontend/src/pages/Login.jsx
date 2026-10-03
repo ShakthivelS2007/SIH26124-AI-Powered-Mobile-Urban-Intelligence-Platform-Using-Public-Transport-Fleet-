@@ -55,7 +55,7 @@ export default function Login() {
       <div style={{ width: '100%', maxWidth: 400 }}>
         <div style={{ textAlign: 'center', marginBottom: 28 }}>
           <Link to="/" style={{ display: 'inline-block' }}>
-            <div style={{ fontSize: 22, fontWeight: 800, color: '#ffffff' }}>RoadWatch</div>
+            <div style={{ fontSize: 22, fontWeight: 800, color: '#ffffff' }}>HelioWatch</div>
             <div
               style={{
                 fontSize: 11,
@@ -108,7 +108,7 @@ export default function Login() {
               onChange={(e) => setEmail(e.target.value)}
               onFocus={() => setFocusedField('email')}
               onBlur={() => setFocusedField(null)}
-              placeholder="officer@roadwatch.gov.in"
+              placeholder="officer@HelioWatch.gov.in"
               autoFocus
               style={inputStyle(focusedField === 'email')}
             />
