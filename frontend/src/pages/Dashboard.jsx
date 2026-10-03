@@ -126,7 +126,7 @@ export default function Dashboard() {
         <Card style={{ flex: 1, minWidth: 320, padding: 0, display: 'flex', flexDirection: 'column' }}>
           <div style={{ padding: '16px 16px 0' }}>
             <h2 style={{ fontSize: 15, fontWeight: 700, margin: 0 }}>Detected Defects</h2>
-            {flase && error && (
+            {false && error && (
               <p style={{ color: 'var(--color-status-red)', fontSize: 13 }}>
                 Couldn&apos;t refresh data: {error}
               </p>
