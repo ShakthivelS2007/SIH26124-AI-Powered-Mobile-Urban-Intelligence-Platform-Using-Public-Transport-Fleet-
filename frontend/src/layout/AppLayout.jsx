@@ -14,7 +14,7 @@ export default function AppLayout() {
 
   const title =
     PAGE_TITLES[location.pathname] ??
-    (location.pathname.startsWith('/defect/') ? 'Defect Detail' : 'RoadWatch');
+    (location.pathname.startsWith('/defect/') ? 'Defect Detail' : 'HelioWatch');
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
